@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5 Essential Nutrients for Child Development - Author Name</title>
+    <script>
+        // Check for saved theme preference immediately
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #ffffff;
+            --secondary-color: #f0f0f0;
+            --text-color: #333333;
+            --accent-color: #4e7a51;
+            --transition-speed: 0.3s;
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #1a1a1a;
+            --secondary-color: #2d2d2d;
+            --text-color: #ffffff;
+            --accent-color: #6ca175;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background-color: var(--primary-color);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1000;
+        }
+
+        .menu-button, .settings-button {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 10px;
+            transition: transform var(--transition-speed);
+        }
+
+        .menu-button:hover, .settings-button:hover {
+            transform: scale(1.1);
+        }
+
+        .site-title {
+            flex-grow: 1;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .sidebar {
+            font-size: 1rem;
+            position: fixed;
+            left: -250px;
+            top: 60px;
+            width: 250px;
+            height: calc(100vh - 60px);
+            background-color: var(--primary-color);
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            transition: left var(--transition-speed);
+            z-index: 999;
+            padding: 20px;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .settings-panel {
+            position: fixed;
+            right: -300px;
+            top: 60px;
+            width: 300px;
+            height: calc(100vh - 60px);
+            background-color: var(--primary-color);
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+            transition: right var(--transition-speed);
+            z-index: 999;
+            padding: 20px;
+        }
+
+        .settings-panel.active {
+            right: 0;
+        }
+
+        .theme-switch {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .theme-switch label {
+            margin-right: 10px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .main-content {
+            margin-top: 60px;
+            padding: 0;
+            flex: 1;
+        }
+
+        .content-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .blog-post {
+            background-color: var(--secondary-color);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .post-header {
+            height: 300px;
+            background-image: url('https://via.placeholder.com/1200x600/4e7a51/ffffff?text=Blog+Post+Header');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .post-meta {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            padding: 30px 20px 20px;
+            color: white;
+        }
+
+        .post-meta h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .post-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .post-info span {
+            margin-right: 20px;
+            font-size: 0.9rem;
+        }
+
+        .post-info i {
+            margin-right: 5px;
+        }
+
+        .post-category {
+            display: inline-block;
+            padding: 3px 8px;
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .post-content {
+            padding: 40px;
+            line-height: 1.8;
+        }
+
+        .post-content h2 {
+            font-size: 1.8rem;
+            margin: 30px 0 15px;
+            color: var(--text-color);
+        }
+
+        .post-content h3 {
+            font-size: 1.4rem;
+            margin: 25px 0 15px;
+            color: var(--text-color);
+        }
+
+        .post-content p {
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .post-content ul, .post-content ol {
+            margin-bottom: 20px;
+            padding-left: 20px;
+        }
+
+        .post-content li {
+            margin-bottom: 10px;
+        }
+
+        .post-content img {
+            max-width: 100%;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .post-content .quote {
+            border-left: 4px solid var(--accent-color);
+            padding: 15px 20px;
+            margin: 20px 0;
+            background-color: rgba(78, 122, 81, 0.1);
+            font-style: italic;
+        }
+
+        .post-content .quote p {
+            margin-bottom: 0;
+        }
+
+        .author-section {
+            display: flex;
+            align-items: center;
+            margin-top: 40px;
+            padding: 20px;
+            background-color: rgba(78, 122, 81, 0.1);
+            border-radius: 10px;
+        }
+
+        .author-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-right: 20px;
+            background-image: url('https://via.placeholder.com/150x150');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .author-info h3 {
+            margin-bottom: 5px;
+            color: var(--text-color);
+        }
+
+        .author-info p {
+            color: var(--text-color);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .related-posts {
+            margin-top: 60px;
+        }
+
+        .related-posts h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--text-color);
+            text-align: center;
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .related-card {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            background-color: var(--secondary-color);
+        }
+
+        .related-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .related-image {
+            height: 150px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .related-content {
+            padding: 15px;
+        }
+
+        .related-content h3 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: var(--text-color);
+        }
+
+        .related-content span {
+            font-size: 0.8rem;
+            color: var(--text-color);
+        }
+
+        .comments-section {
+            margin-top: 60px;
+        }
+
+        .comments-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .comment {
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: var(--secondary-color);
+            border-radius: 10px;
+        }
+
+        .comment-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .comment-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+            background-color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #666;
+        }
+
+        .comment-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            color: var(--text-color);
+        }
+
+        .comment-info span {
+            font-size: 0.8rem;
+            color: var(--text-color);
+        }
+
+        .comment-body {
+            line-height: 1.6;
+            color: var(--text-color);
+        }
+
+        .comment-form {
+            margin-top: 40px;
+        }
+
+        .comment-form h3 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-color);
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: var(--primary-color);
+            color: var(--text-color);
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .post-button {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .post-button:hover {
+            background-color: #40634c;
+        }
+
+        .footer {
+            background-color: var(--secondary-color);
+            padding: 20px;
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        .footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .post-meta h1 {
+                font-size: 2rem;
+            }
+
+            .content-container {
+                padding: 20px;
+            }
+
+            .post-content {
+                padding: 20px;
+            }
+
+            .related-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .author-section {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .author-image {
+                margin: 0 0 15px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <button class="menu-button" id="menuButton">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="site-title">Author Name</div>
+        <button class="settings-button" id="settingsButton">
+            <i class="fas fa-cog"></i>
+        </button>
+    </header>
+
+    <div class="sidebar" id="sidebar">
+        <nav>
+            <ul style="list-style: none;">
+                <li style="margin-bottom: 15px;"><a href="../../index.html" style="color: var(--text-color); text-decoration: none;">Home</a></li>
+                <li style="margin-bottom: 15px;"><a href="../books/childrens-health/index.html" style="color: var(--text-color); text-decoration: none;">Children's Health Books</a></li>
+                <li style="margin-bottom: 15px;"><a href="../books/business/index.html" style="color: var(--text-color); text-decoration: none;">Business Books</a></li>
+                <li style="margin-bottom: 15px;"><a href="index.html" style="color: var(--text-color); text-decoration: none;">Blog</a></li>
+                <li style="margin-bottom: 15px;"><a href="../about/index.html" style="color: var(--text-color); text-decoration: none;">About the Author</a></li>
+                <li style="margin-bottom: 15px;"><a href="../contact/index.html" style="color: var(--text-color); text-decoration: none;">Contact</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="settings-panel" id="settingsPanel">
+        <h2>Settings</h2>
+        <div class="theme-switch">
+            <label for="themeToggle">Dark Mode</label>
+            <label class="switch">
+                <input type="checkbox" id="themeToggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+
+    <main class="main-content">
+        <div class="content-container">
+            <article class="blog-post">
+                <div class="post-header">
+                    <div class="post-meta">
+                        <h1>5 Essential Nutrients for Child Development</h1>
+                        <div class="post-info">
+                            <span><i class="far fa-calendar-alt"></i> June 15, 2023</span>
+                            <span><i class="far fa-clock"></i> 8 min read</span>
+                        </div>
+                        <span class="post-category">Children's Health</span>
+                    </div>
+                </div>
+                
+                <div class="post-content">
+                    <p>A child's growing body and developing brain need specific nutrients to thrive. While all nutrients play important roles in health, certain ones are particularly crucial during childhood development. This article explores five essential nutrients that your child needs for optimal growth and development.</p>
+                    
+                    <div class="quote">
+                        <p>"Proper nutrition during childhood sets the foundation for lifelong health, cognitive ability, and even emotional well-being."</p>
+                    </div>
+                    
+                    <h2>1. Protein: The Building Blocks</h2>
+                    <p>Protein is essential for building and repairing tissues throughout the body. During childhood, when growth is rapid, protein needs are higher per pound of body weight than at any other time of life.</p>
+                    
+                    <p>Protein provides the building blocks (amino acids) necessary for:</p>
+                    <ul>
+                        <li>Muscle development</li>
+                        <li>Enzyme production</li>
+                        <li>Immune system function</li>
+                        <li>Healthy skin, hair, and nails</li>
+                        <li>Brain development and neurotransmitter production</li>
+                    </ul>
+                    
+                    <p>Good sources of protein include lean meats, poultry, fish, eggs, dairy products, legumes, nuts, and seeds. For vegetarian or vegan children, combining different plant proteins throughout the day ensures they get all essential amino acids.</p>
+                    
+                    <h2>2. Calcium: More Than Just Strong Bones</h2>
+                    <p>Calcium is most known for building strong bones and teeth, but it also supports nerve function, blood clotting, and muscle contraction. Childhood and adolescence are critical periods for bone development, with about 90% of adult bone mass acquired by age 18.</p>
+                    
+                    <p>Beyond bones, calcium helps with:</p>
+                    <ul>
+                        <li>Heart rhythm regulation</li>
+                        <li>Blood vessel function</li>
+                        <li>Enzyme activity</li>
+                        <li>Hormone secretion</li>
+                    </ul>
+                    
+                    <p>Dairy products are rich sources of calcium, but it's also found in leafy greens like kale and bok choy, fortified plant milks, canned salmon with bones, and almonds.</p>
+                    
+                    <h2>3. Iron: Oxygen Delivery and Brain Power</h2>
+                    <p>Iron is critical for transporting oxygen throughout the body and brain development. Iron deficiency is one of the most common nutritional deficiencies worldwide and can lead to anemia, fatigue, and cognitive impairments.</p>
+                    
+                    <p>In children, iron is particularly important for:</p>
+                    <ul>
+                        <li>Brain development and cognitive function</li>
+                        <li>Energy production</li>
+                        <li>Immune system strength</li>
+                        <li>Focus and attention</li>
+                        <li>Physical growth</li>
+                    </ul>
+                    
+                    <p>Good sources include lean red meat, poultry, seafood, beans, fortified cereals, and dark green leafy vegetables. Vitamin C helps with iron absorption, so pairing iron-rich foods with fruits like oranges or strawberries is beneficial.</p>
+                    
+                    <h2>4. Omega-3 Fatty Acids: Brain and Eye Development</h2>
+                    <p>Omega-3 fatty acids, particularly DHA, are crucial for brain and eye development. These essential fats must come from diet as the body cannot produce them efficiently.</p>
+                    
+                    <p>Research shows omega-3s support:</p>
+                    <ul>
+                        <li>Brain cell structure and communication</li>
+                        <li>Visual development</li>
+                        <li>Learning and focus</li>
+                        <li>Mood regulation</li>
+                        <li>Reduced inflammation</li>
+                    </ul>
+                    
+                    <p>Fish such as salmon, mackerel, and sardines are excellent sources. Plant sources include flaxseeds, chia seeds, walnuts, and hemp seeds, though these provide ALA, which the body must convert to DHA (a less efficient process).</p>
+                    
+                    <h2>5. Vitamin D: The Sunshine Vitamin</h2>
+                    <p>Vitamin D works closely with calcium for bone health but also has numerous other functions in the body. Many children don't get enough vitamin D, especially those living in northern climates or who spend limited time outdoors.</p>
+                    
+                    <p>Vitamin D is essential for:</p>
+                    <ul>
+                        <li>Calcium absorption and bone mineralization</li>
+                        <li>Immune system regulation</li>
+                        <li>Cell growth and communication</li>
+                        <li>Neuromuscular function</li>
+                        <li>Reducing inflammation</li>
+                    </ul>
+                    
+                    <p>While sunlight exposure triggers vitamin D production in the skin, food sources include fatty fish, egg yolks, and fortified products like milk, orange juice, and cereals. Many children benefit from vitamin D supplements, especially during winter months.</p>
+                    
+                    <h2>Creating Balanced Meals for Children</h2>
+                    <p>Rather than focusing on individual nutrients, aim to provide a varied diet rich in whole foods. Here are some strategies to ensure your child gets these essential nutrients:</p>
+                    
+                    <ul>
+                        <li>Include protein at each meal</li>
+                        <li>Serve calcium-rich foods or beverages daily</li>
+                        <li>Pair iron sources with vitamin C for better absorption</li>
+                        <li>Include fatty fish in meals 2-3 times per week</li>
+                        <li>Ensure adequate sun exposure and consider vitamin D supplementation when appropriate</li>
+                    </ul>
+                    
+                    <p>Remember that children learn eating habits by example. When you model healthy eating and provide nutritious options regularly, you help establish lifelong habits that support optimal development and health.</p>
+                    
+                    <div class="author-section">
+                        <div class="author-image"></div>
+                        <div class="author-info">
+                            <h3>About the Author</h3>
+                            <p>Author Name is a nutritionist specializing in child development and family health. She has authored several books on nutrition and wellness for both children and business professionals.</p>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            
+            <section class="related-posts">
+                <h2>Related Articles</h2>
+                <div class="related-grid">
+                    <a href="meal-planning.html" class="related-card">
+                        <div class="related-image" style="background-image: url('https://via.placeholder.com/600x400/3d5a43/ffffff?text=Related+Post+1');"></div>
+                        <div class="related-content">
+                            <h3>Meal Planning for Busy Families</h3>
+                            <span>May 10, 2023</span>
+                        </div>
+                    </a>
+                    
+                    <a href="nutrition-academic-performance.html" class="related-card">
+                        <div class="related-image" style="background-image: url('https://via.placeholder.com/600x400/4e7a51/ffffff?text=Related+Post+2');"></div>
+                        <div class="related-content">
+                            <h3>The Link Between Nutrition and Academic Performance</h3>
+                            <span>April 22, 2023</span>
+                        </div>
+                    </a>
+                    
+                    <a href="healthy-snacks.html" class="related-card">
+                        <div class="related-image" style="background-image: url('https://via.placeholder.com/600x400/3d5a43/ffffff?text=Related+Post+3');"></div>
+                        <div class="related-content">
+                            <h3>Healthy Snacks for Kids That They'll Actually Eat</h3>
+                            <span>March 24, 2023</span>
+                        </div>
+                    </a>
+                </div>
+            </section>
+            
+            <section class="comments-section">
+                <h2>Comments (3)</h2>
+                
+                <div class="comment">
+                    <div class="comment-header">
+                        <div class="comment-avatar">JD</div>
+                        <div class="comment-info">
+                            <h3>Jane Doe</h3>
+                            <span>June 16, 2023</span>
+                        </div>
+                    </div>
+                    <div class="comment-body">
+                        <p>This was so helpful! My 5-year-old is such a picky eater, and I worry about her getting enough nutrients. I'm going to try incorporating more of these foods into her meals. The tip about pairing iron with vitamin C is something I hadn't heard before.</p>
+                    </div>
+                </div>
+                
+                <div class="comment">
+                    <div class="comment-header">
+                        <div class="comment-avatar">MS</div>
+                        <div class="comment-info">
+                            <h3>Michael Smith</h3>
+                            <span>June 17, 2023</span>
+                        </div>
+                    </div>
+                    <div class="comment-body">
+                        <p>As a pediatrician, I appreciate this well-researched article. I often share similar information with parents in my practice. One addition I would suggest is mentioning zinc, which is also critical for growth and immune function. Looking forward to more articles on children's nutrition!</p>
+                    </div>
+                </div>
+                
+                <div class="comment">
+                    <div class="comment-header">
+                        <div class="comment-avatar">AR</div>
+                        <div class="comment-info">
+                            <h3>Aisha Rashid</h3>
+                            <span>June 18, 2023</span>
+                        </div>
+                    </div>
+                    <div class="comment-body">
+                        <p>We recently switched to a plant-based diet and I've been concerned about making sure my kids get enough of these nutrients. The suggestions for plant sources of protein and omega-3s are really helpful. Would love to see a full article on plant-based nutrition for kids!</p>
+                    </div>
+                </div>
+                
+                <div class="comment-form">
+                    <h3>Leave a Comment</h3>
+                    <form action="#" method="post">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="comment">Comment</label>
+                            <textarea id="comment" name="comment" required></textarea>
+                        </div>
+                        <button type="submit" class="post-button">Post Comment</button>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <a href="../../index.html">Home</a>
+        <a href="../books/childrens-health/index.html">Children's Health Books</a>
+        <a href="../books/business/index.html">Business Books</a>
+        <a href="index.html">Blog</a>
+        <a href="../about/index.html">About</a>
+        <a href="../contact/index.html">Contact</a>
+        <a href="../terms-of-agreement/index.html">Terms of Service</a>
+        <a href="../privacy-policy/index.html">Privacy Policy</a>
+    </footer>
+
+    <script>
+        // Menu toggle
+        const menuButton = document.getElementById('menuButton');
+        const sidebar = document.getElementById('sidebar');
+        
+        menuButton.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+
+        // Settings toggle
+        const settingsButton = document.getElementById('settingsButton');
+        const settingsPanel = document.getElementById('settingsPanel');
+        
+        settingsButton.addEventListener('click', () => {
+            settingsPanel.classList.toggle('active');
+        });
+
+        // Theme toggle
+        const themeToggle = document.getElementById('themeToggle');
+        
+        // Set the toggle state based on current theme
+        if (document.documentElement.getAttribute('data-theme') === 'dark') {
+            themeToggle.checked = true;
+        }
+
+        themeToggle.addEventListener('change', () => {
+            if (themeToggle.checked) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Close panels when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!sidebar.contains(e.target) && !menuButton.contains(e.target)) {
+                sidebar.classList.remove('active');
+            }
+            if (!settingsPanel.contains(e.target) && !settingsButton.contains(e.target)) {
+                settingsPanel.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html> 

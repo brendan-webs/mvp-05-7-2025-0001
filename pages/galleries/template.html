@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Galleries - Author Name</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #ffffff;
+            --secondary-color: #f0f0f0;
+            --text-color: #333333;
+            --accent-color: #4e7a51;
+            --transition-speed: 0.3s;
+        }
+
+        [data-theme="dark"] {
+            --primary-color: #1a1a1a;
+            --secondary-color: #2d2d2d;
+            --text-color: #ffffff;
+            --accent-color: #6ca175;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3.75rem;
+            background-color: var(--primary-color);
+            box-shadow: 0 0.125rem 0.3125rem rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            padding: 0 1.25rem;
+            z-index: 1000;
+        }
+
+        .menu-button, .settings-button {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.625rem;
+            transition: transform var(--transition-speed);
+        }
+
+        .menu-button:hover, .settings-button:hover {
+            transform: scale(1.1);
+        }
+
+        .site-title {
+            flex-grow: 1;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .main-content {
+            margin-top: 3.75rem;
+            padding: 1.25rem;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            width: 100%;
+            min-height: calc(100vh - 3.75rem);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(12.5rem, 1fr));
+            gap: 1.25rem;
+            padding: 1.25rem;
+            width: 100%;
+            max-width: 75rem;
+            margin: 0 auto;
+            justify-items: center;
+        }
+
+        .gallery-item {
+            width: 100%;
+            max-width: 15.625rem;
+            min-width: 12.5rem;
+            aspect-ratio: 4/3;
+            overflow: hidden;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.125rem 0.3125rem rgba(0, 0, 0, 0.1);
+            transition: transform var(--transition-speed);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background-color: var(--secondary-color);
+            cursor: pointer;
+        }
+
+        .gallery-item-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.5;
+            z-index: 0;
+            filter: blur(10px);
+            transform: scale(1.1);
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            max-width: 100%;
+            max-height: 100%;
+            position: relative;
+            z-index: 1;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-item img.loaded {
+            opacity: 1;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .footer {
+            background-color: var(--secondary-color);
+            padding: 20px;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 75rem) {
+            .gallery-grid {
+                padding: 1rem;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 37.5rem) {
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+                padding: 0.75rem;
+                gap: 0.75rem;
+            }
+            
+            .gallery-item {
+                max-width: none;
+                min-width: 0;
+            }
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            position: fixed;
+            left: -18.75rem;
+            top: 3.75rem;
+            width: 18.75rem;
+            height: calc(100vh - 3.75rem);
+            background-color: var(--primary-color);
+            box-shadow: 0.125rem 0 0.3125rem rgba(0, 0, 0, 0.1);
+            transition: left var(--transition-speed);
+            z-index: 999;
+            padding: 1.25rem;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            margin-bottom: 0.9375rem;
+        }
+
+        .sidebar a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 1.1rem;
+            display: block;
+            padding: 0.625rem;
+            border-radius: 0.3125rem;
+            transition: background-color var(--transition-speed);
+        }
+
+        .sidebar a:hover {
+            background-color: var(--secondary-color);
+        }
+
+        /* Remove duplicate sidebar styles */
+        .sidebar.duplicate {
+            display: none;
+        }
+
+        /* Image Viewer Modal Styles */
+        .image-viewer-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+        }
+
+        .image-viewer-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-image-container {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .modal-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 90vh;
+            object-fit: contain;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        
+        .modal-image.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-controls {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            background-color: #1A1A1A;
+            padding: 0;
+            border-radius: 1.875rem 1.875rem 0 0;
+            z-index: 2001;
+            box-shadow: 0 -0.125rem 0.625rem rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            width: 18.75rem;
+            transition: transform 0.3s ease;
+        }
+
+        .modal-controls.collapsed {
+            transform: translateX(-50%) translateY(calc(100% - 2.8125rem));
+        }
+
+        .modal-controls-header {
+            width: 100%;
+            background-color: rgba(26, 26, 26, 0.8);
+            padding: 0.75rem;
+            display: flex;
+            justify-content: center;
+            cursor: pointer;
+            border-bottom: 0.0625rem solid #333;
+            min-height: 2.8125rem;
+        }
+
+        .modal-controls-header i {
+            transition: transform 0.3s ease;
+        }
+
+        .modal-controls.collapsed .modal-controls-header i {
+            transform: rotate(180deg);
+        }
+
+        .modal-controls-content {
+            display: flex;
+            gap: 1.25rem;
+            padding: 0.9375rem 1.875rem;
+            align-items: center;
+            min-height: 2.8125rem;
+            justify-content: center;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-controls.collapsed .modal-controls-content {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+
+        .settings-panel {
+            position: fixed;
+            right: -18.75rem;
+            top: 3.75rem;
+            width: 18.75rem;
+            height: calc(100vh - 3.75rem);
+            background-color: var(--primary-color);
+            box-shadow: -0.125rem 0 0.3125rem rgba(0, 0, 0, 0.1);
+            transition: right var(--transition-speed);
+            z-index: 999;
+            padding: 1.25rem;
+        }
+
+        .settings-panel.active {
+            right: 0;
+        }
+
+        /* Modal Settings Panel specific styles */
+        #modalSettingsPanel {
+            position: fixed;
+            right: -18.75rem;
+            top: 0;
+            width: 18.75rem;
+            height: calc(100vh);
+            background-color: var(--primary-color);
+            box-shadow: -0.125rem 0 0.3125rem rgba(0, 0, 0, 0.1);
+            transition: right var(--transition-speed);
+            z-index: 2002;
+            padding: 1.25rem;
+        }
+
+        #modalSettingsPanel.active {
+            right: 0;
+        }
+
+        #modalSettingsPanel::after {
+            display: none;
+        }
+
+        .speed-control {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-color);
+            font-size: 1rem;
+            padding: 0.5rem 0;
+            margin-top: 1.25rem;
+        }
+
+        .speed-control input {
+            width: 3.75rem;
+            background: var(--secondary-color);
+            border: 0.0625rem solid var(--text-color);
+            color: var(--text-color);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.9rem;
+        }
+
+        .speed-control input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .speed-control label {
+            white-space: nowrap;
+            color: var(--text-color);
+        }
+
+        .modal-controls button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px 10px;
+            transition: transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-controls button:hover {
+            transform: scale(1.1);
+        }
+
+        .modal-controls button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .modal-nav {
+            display: none;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1.25rem;
+            right: 1.25rem;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.625rem;
+            transition: transform 0.2s ease;
+            z-index: 2001;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            width: 3.125rem;
+            height: 3.125rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-modal:hover {
+            transform: scale(1.1);
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        /* Add no-scroll class */
+        body.no-scroll {
+            overflow: hidden;
+        }
+
+        .theme-switch {
+            display: flex;
+            align-items: center;
+            margin-top: 1.25rem;
+        }
+
+        .theme-switch label {
+            margin-right: 0.625rem;
+            font-size: 1rem;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 3.75rem;
+            height: 2.125rem;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 2.125rem;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 1.625rem;
+            width: 1.625rem;
+            left: 0.25rem;
+            bottom: 0.25rem;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .modal-settings-button {
+            position: absolute;
+            bottom: 0;
+            right: 1.25rem;
+            background: rgba(26, 26, 26, 0.8);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 2rem;
+            width: 3.125rem;
+            height: 3.125rem;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2004;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            transition: transform var(--transition-speed);
+        }
+
+        .modal-settings-button:hover {
+            background: rgba(26, 26, 26, 0.9);
+        }
+
+        .modal-settings-button i {
+            pointer-events: none;
+        }
+
+        .offset-control {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(26, 26, 26, 0.8);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            color: white;
+            z-index: 9999;
+            display: none;
+        }
+
+        .offset-control input {
+            width: 4rem;
+            background: #333;
+            border: 1px solid #444;
+            color: white;
+            padding: 0.25rem;
+            border-radius: 0.25rem;
+            margin-left: 0.5rem;
+        }
+
+        .timer-display {
+            color: white;
+            font-size: 0.9rem;
+            min-width: 3rem;
+            text-align: center;
+            font-family: monospace;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Modal elements
+            const modal = document.getElementById('imageViewerModal');
+            const modalImages = document.querySelectorAll('.modal-image');
+            const prevButton = document.getElementById('prevImage');
+            const nextButton = document.getElementById('nextImage');
+            const playPauseButton = document.getElementById('playPause');
+            const closeButton = document.getElementById('closeModal');
+            const controlsToggle = document.getElementById('controlsToggle');
+            const controls = document.querySelector('.modal-controls');
+            const speedInput = document.getElementById('speedInput');
+            const settingsButton = document.getElementById('settingsButton');
+            const settingsPanel = document.getElementById('settingsPanel');
+            const modalSettingsButton = document.getElementById('modalSettingsButton');
+            const modalSettingsPanel = document.getElementById('modalSettingsPanel');
+            const modalSettingsIcon = document.getElementById('modalSettingsIcon');
+            
+            // Image handling variables
+            let currentImageIndex = 0;
+            let isPlaying = false;
+            let playInterval;
+            let currentSpeed = 1.5; // Default speed in seconds
+            let imageBuffer = [];
+            let isTransitioning = false;
+            let countdownInterval;
+            let remainingTime = currentSpeed;
+
+            // Controls toggle functionality
+            let controlsCollapsed = false;
+
+            controlsToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                controlsCollapsed = !controlsCollapsed;
+                controls.classList.toggle('collapsed', controlsCollapsed);
+                
+                // Update settings button position immediately
+                const settingsButton = document.getElementById('modalSettingsButton');
+                if (settingsButton) {
+                    settingsButton.style.transform = controlsCollapsed ? 'translateY(100%)' : 'translateY(0)';
+                }
+
+                // Close modal settings panel if collapsing controls
+                if (controlsCollapsed) {
+                    modalSettingsPanel.classList.remove('active');
+                }
+            });
+
+            // Function to preload images
+            function preloadImages() {
+                return new Promise((resolve) => {
+                    const galleryImages = document.querySelectorAll('.gallery-item img');
+                    if (!galleryImages.length) {
+                        console.error('No images found in gallery');
+                        resolve();
+                        return;
+                    }
+
+                    let preloadedCount = 0;
+                    const totalImages = galleryImages.length;
+                    
+                    // Initialize image buffer
+                    imageBuffer = Array.from(galleryImages).map(img => ({
+                        src: img.src || img.dataset.src,
+                        loaded: false
+                    }));
+
+                    galleryImages.forEach((img, index) => {
+                        // Set the src for the grid image
+                        if (img.dataset.src) {
+                            img.src = img.dataset.src;
+                        }
+
+                        const preloadImg = new Image();
+                        preloadImg.onload = () => {
+                            imageBuffer[index].loaded = true;
+                            preloadedCount++;
+                            if (preloadedCount === totalImages) {
+                                console.log('All images preloaded successfully');
+                                resolve();
+                            }
+                        };
+                        preloadImg.onerror = () => {
+                            console.error('Failed to preload image:', img.src || img.dataset.src);
+                            imageBuffer[index].loaded = false; // Mark as not loaded if preload fails
+                            preloadedCount++;
+                            if (preloadedCount === totalImages) {
+                                console.log('All images processed (some may have failed)');
+                                resolve();
+                            }
+                        };
+                        preloadImg.src = img.src || img.dataset.src;
+                    });
+                });
+            }
+
+            // Function to update modal image
+            function updateModalImage(index) {
+                if (isTransitioning || !imageBuffer.length) return;
+                isTransitioning = true;
+
+                const nextIndex = index % imageBuffer.length;
+                const nextImage = imageBuffer[nextIndex];
+                
+                if (!nextImage || !nextImage.loaded) {
+                    console.warn('Image not ready:', nextIndex);
+                    isTransitioning = false;
+                    return;
+                }
+
+                const currentActive = document.querySelector('.modal-image.active');
+                const nextActive = currentActive === modalImages[0] ? modalImages[1] : modalImages[0];
+                
+                // First, ensure the next image is properly hidden
+                nextActive.classList.remove('active');
+                
+                // Set the source
+                nextActive.src = nextImage.src;
+                
+                // Wait for the image to load
+                nextActive.onload = () => {
+                    // Add active class to show the next image
+                    nextActive.classList.add('active');
+                    
+                    // Remove active class from current image after a short delay
+                    setTimeout(() => {
+                        currentActive.classList.remove('active');
+                        currentImageIndex = nextIndex;
+                        isTransitioning = false;
+                    }, 50); // Small delay to ensure smooth transition
+                };
+                
+                nextActive.onerror = () => {
+                    console.error('Failed to load image:', nextImage.src);
+                    isTransitioning = false;
+                };
+            }
+
+            // Function to update timer display
+            function updateTimerDisplay() {
+                const timerDisplay = document.getElementById('timerDisplay');
+                if (timerDisplay) {
+                    timerDisplay.textContent = `${remainingTime.toFixed(1)}s`;
+                }
+            }
+
+            // Function to start countdown
+            function startCountdown() {
+                clearInterval(countdownInterval);
+                remainingTime = currentSpeed;
+                updateTimerDisplay();
+                
+                countdownInterval = setInterval(() => {
+                    remainingTime -= 0.1;
+                    if (remainingTime <= 0) {
+                        remainingTime = currentSpeed;
+                    }
+                    updateTimerDisplay();
+                }, 100);
+            }
+
+            // Function to stop countdown
+            function stopCountdown() {
+                clearInterval(countdownInterval);
+                remainingTime = currentSpeed;
+                updateTimerDisplay();
+            }
+
+            // Function to start slideshow
+            function startSlideshow() {
+                if (playInterval) clearInterval(playInterval);
+                startCountdown();
+                
+                playInterval = setInterval(() => {
+                    if (!isTransitioning) {
+                        updateModalImage(currentImageIndex + 1);
+                    }
+                }, currentSpeed * 1000);
+            }
+
+            // Function to toggle play/pause
+            function togglePlayPause() {
+                isPlaying = !isPlaying;
+                playPauseButton.innerHTML = isPlaying ? 
+                    '<i class="fas fa-pause"></i>' : 
+                    '<i class="fas fa-play"></i>';
+
+                if (isPlaying) {
+                    startSlideshow();
+                } else {
+                    clearInterval(playInterval);
+                    stopCountdown();
+                }
+            }
+
+            // Initialize the gallery
+            function initializeGallery() {
+                // Preload images and initialize
+                preloadImages().then(() => {
+                    console.log('Gallery initialized');
+                    // Set initial image
+                    if (imageBuffer.length > 0) {
+                        updateModalImage(0);
+                        if (isPlaying) {
+                            startSlideshow();
+                        }
+                    } else {
+                        console.error('No images available to display');
+                    }
+                });
+            }
+
+            // Function to clear modal state
+            function clearModal() {
+                const modalImages = document.querySelectorAll('.modal-image');
+                modalImages.forEach(img => {
+                    img.classList.remove('active');
+                    img.src = '';
+                });
+                modal.classList.remove('active');
+                modalSettingsButton.style.display = 'none';
+                document.body.classList.remove('no-scroll');
+                isPlaying = false;
+                clearInterval(playInterval);
+                playPauseButton.innerHTML = '<i class="fas fa-play"></i>';
+                modalSettingsPanel.classList.remove('active');
+            }
+
+            // Add click event listeners to gallery items
+            document.querySelectorAll('.gallery-item').forEach((item, index) => {
+                item.addEventListener('click', () => {
+                    // Close any open menus
+                    sidebar.classList.remove('active');
+                    settingsPanel.classList.remove('active');
+                    modalSettingsPanel.classList.remove('active');
+                    
+                    // Clear modal state
+                    clearModal();
+                    
+                    // Open the modal
+                    modalSettingsButton.style.display = 'flex';
+                    modal.classList.add('active');
+                    document.body.classList.add('no-scroll');
+                    
+                    // Set initial image
+                    currentImageIndex = index;
+                    const nextImage = imageBuffer[index];
+                    if (nextImage && nextImage.loaded) {
+                        modalImages[0].src = nextImage.src;
+                        modalImages[0].onload = () => {
+                            modalImages[0].classList.add('active');
+                        };
+                    }
+                });
+            });
+
+            // Modal control event listeners
+            prevButton.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent event bubbling
+                if (!isTransitioning && imageBuffer.length > 0) {
+                    const newIndex = (currentImageIndex - 1 + imageBuffer.length) % imageBuffer.length;
+                    updateModalImage(newIndex);
+                }
+            });
+
+            nextButton.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent event bubbling
+                if (!isTransitioning && imageBuffer.length > 0) {
+                    const newIndex = (currentImageIndex + 1) % imageBuffer.length;
+                    updateModalImage(newIndex);
+                }
+            });
+
+            playPauseButton.addEventListener('click', togglePlayPause);
+            
+            closeButton.addEventListener('click', clearModal);
+
+            // Initialize the gallery
+            initializeGallery();
+
+            // Settings toggle for header (slides from right)
+            settingsButton.addEventListener('click', () => {
+                settingsPanel.classList.toggle('active');
+            });
+
+            // Toggle settings panel for modal button
+            modalSettingsButton.addEventListener('click', () => {
+                modalSettingsPanel.classList.toggle('active');
+            });
+
+            // Close settings panel when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!modalSettingsPanel.contains(e.target) && !modalSettingsButton.contains(e.target)) {
+                    modalSettingsPanel.classList.remove('active');
+                }
+            });
+
+            // Prevent modal from closing when interacting with settings
+            modalSettingsPanel.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+
+            // Theme toggle
+            const themeToggle = document.getElementById('themeToggle');
+            
+            // Check for saved theme preference
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeToggle.checked = true;
+            }
+
+            themeToggle.addEventListener('change', () => {
+                if (themeToggle.checked) {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+
+            // Handle speed changes
+            speedInput.addEventListener('input', (e) => {
+                const newSpeed = parseFloat(e.target.value);
+                if (newSpeed >= 0.1) {
+                    currentSpeed = newSpeed;
+                    remainingTime = currentSpeed;
+                    updateTimerDisplay();
+                    if (isPlaying) {
+                        clearInterval(playInterval);
+                        startSlideshow();
+                    }
+                } else {
+                    e.target.value = currentSpeed;
+                }
+            });
+
+            speedInput.addEventListener('change', (e) => {
+                const newSpeed = parseFloat(e.target.value);
+                if (newSpeed >= 0.1) {
+                    currentSpeed = newSpeed;
+                    remainingTime = currentSpeed;
+                    updateTimerDisplay();
+                    if (isPlaying) {
+                        clearInterval(playInterval);
+                        startSlideshow();
+                    }
+                } else {
+                    e.target.value = currentSpeed;
+                }
+            });
+
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (!modal.classList.contains('active')) return;
+
+                switch(e.key) {
+                    case 'ArrowLeft':
+                        prevButton.click();
+                        break;
+                    case 'ArrowRight':
+                        nextButton.click();
+                        break;
+                    case 'Escape':
+                        closeButton.click();
+                        break;
+                    case ' ':
+                        e.preventDefault();
+                        togglePlayPause();
+                        break;
+                }
+            });
+
+            // Handle menu toggle
+            const menuButton = document.querySelector('.menu-button');
+            const sidebar = document.querySelector('.sidebar');
+            
+            menuButton.addEventListener('click', () => {
+                sidebar.classList.toggle('active');
+            });
+
+            // Function to update settings button position
+            const offsetInput = document.getElementById('offsetInput');
+            let currentOffset = -64;
+
+            function updateSettingsButtonPosition() {
+                const controls = document.querySelector('.modal-controls');
+                const settingsButton = document.getElementById('modalSettingsButton');
+                const modal = document.getElementById('imageViewerModal');
+                
+                if (controls && settingsButton && modal) {
+                    const controlsRect = controls.getBoundingClientRect();
+                    const modalRect = modal.getBoundingClientRect();
+                    
+                    // Calculate position relative to the modal
+                    const relativeRight = modalRect.right - controlsRect.right + currentOffset;
+                    
+                    settingsButton.style.position = 'absolute';
+                    settingsButton.style.bottom = '0';
+                    settingsButton.style.right = `${relativeRight}px`;
+                }
+            }
+
+            // Update position on window resize
+            window.addEventListener('resize', updateSettingsButtonPosition);
+
+            // Update offset when input changes
+            offsetInput.addEventListener('input', (e) => {
+                currentOffset = parseInt(e.target.value) || 0;
+                updateSettingsButtonPosition();
+            });
+
+            // Initial position update
+            updateSettingsButtonPosition();
+
+            // Update position when modal is opened
+            document.querySelectorAll('.gallery-item').forEach((item, index) => {
+                item.addEventListener('click', () => {
+                    // Small delay to allow for the modal to open
+                    setTimeout(updateSettingsButtonPosition, 100);
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <header class="header">
+        <button class="menu-button" id="menuButton">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="site-title">Author Name</div>
+        <button class="settings-button" id="settingsButton">
+            <i class="fas fa-cog"></i>
+        </button>
+    </header>
+
+    <nav class="sidebar">
+        <ul>
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="../books/childrens-health/index.html">Children's Health Books</a></li>
+            <li><a href="../books/business/index.html">Business Books</a></li>
+            <li><a href="../about/index.html">About the Author</a></li>
+            <li><a href="../contact/index.html">Contact</a></li>
+        </ul>
+    </nav>
+
+    <div class="settings-panel" id="settingsPanel">
+        <h2>Settings</h2>
+        <div class="theme-switch">
+            <label for="themeToggle">Dark Mode</label>
+            <label class="switch">
+                <input type="checkbox" id="themeToggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+
+    
+
+    <!-- Modal Settings Panel -->
+    <div class="settings-panel" id="modalSettingsPanel">
+        <h2>Slideshow Settings</h2>
+        <div class="speed-control">
+            <label for="speedInput">Slideshow Speed (s):</label>
+            <input type="number" id="speedInput" min="0.1" step="0.1" value="1.5">
+        </div>
+    </div>
+
+    <div class="offset-control">
+        <label>Offset: <input type="number" id="offsetInput" value="-100"></label>
+    </div>
+
+    <main class="main-content">
+        <div style="margin-top: 5rem;"></div>
+        <div class="gallery-grid" id="galleryGrid">
+            <!-- Gallery items will be inserted here -->
+        </div>
+    </main>
+
+    <button class="modal-settings-button" id="modalSettingsButton">
+        <i class="fas fa-cog"></i>
+    </button>
+    <!-- Image Viewer Modal -->
+    <div class="image-viewer-modal" id="imageViewerModal">
+        <div class="modal-content">
+            <div class="modal-image-container">
+                <img class="modal-image active" src="" alt="">
+                <img class="modal-image" src="" alt="">
+            </div>
+            <div class="modal-controls">
+                <div class="modal-controls-header" id="controlsToggle">
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="modal-controls-content">
+                    <button class="prev-image" id="prevImage"><i class="fas fa-chevron-left"></i></button>
+                    <button class="play-pause" id="playPause"><i class="fas fa-play"></i></button>
+                    <div class="timer-display" id="timerDisplay">1.5s</div>
+                    <button class="next-image" id="nextImage"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+            <button class="close-modal" id="closeModal"><i class="fas fa-times"></i></button>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <a href="../../index.html">Home</a>
+        <a href="../books/childrens-health/index.html">Children's Health Books</a>
+        <a href="../books/business/index.html">Business Books</a>
+        <a href="../about/index.html">About</a>
+        <a href="../contact/index.html">Contact</a>
+        <a href="../terms-of-agreement/index.html">Terms of Service</a>
+        <a href="../privacy-policy/index.html">Privacy Policy</a>
+        <a href="../galleries/template.html">Galleries</a>
+    </footer>
+
+    <script>
+        // Theme toggle functionality
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        }
+
+        // Menu functionality
+        const menuButton = document.getElementById('menuButton');
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.querySelector('.main-content');
+
+        menuButton.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+
+        // Close sidebar when clicking outside
+        document.addEventListener('click', (event) => {
+            if ((sidebar && !sidebar.contains(event.target)) && (menuButton && !menuButton.contains(event.target))) {
+                sidebar.classList.remove('active');
+            }
+        });
+
+        // Close sidebar when window is resized to desktop size
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                sidebar.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html> 
