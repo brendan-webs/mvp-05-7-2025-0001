@@ -203,8 +203,8 @@
             background-size: cover;
             background-position: center;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
+            justify-content: space-between;
             border-radius: 10px;
         }
 
@@ -212,21 +212,28 @@
             opacity: 1;
         }
 
-        .slide-content {
+        .slide-title {
             background-color: rgba(0, 0, 0, 0.6);
             color: #fff;
-            padding: 15px;
-            border-radius: 8px;
+            /* padding: 10px 15px; */
+            border-radius: .9rem;
             text-align: center;
-            max-width: 80%;
+            display: inline-block;
+            /* margin: 15px 0 0 15px; */
+            /* max-width: 70%; */
         }
 
-        .slide-content h2 {
+        .slide-title h2 {
             font-size: 1.8rem;
-            margin-bottom: 10px;
+            margin: 0;
         }
 
-        .slide-content p {
+        .slide-synopsis {
+            background-color: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: .9rem;
+            text-align: left;
             font-size: 1rem;
         }
 
@@ -258,13 +265,17 @@
 
         /* Slideshow dots */
         .dots-container {
-            position: absolute;
-            bottom: 20px;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            z-index: 10;
-        }
+    /* position: absolute; */
+    /* bottom: 20px; */
+    /* width: 86%; */
+    display: flex
+;
+    justify-content: center;
+    z-index: 10;
+    align-items: center;
+    /* margin-bottom: -1rem; */
+    margin-top: -1rem;
+}
 
         .dot {
             width: 12px;
@@ -447,35 +458,43 @@
             <!-- Book Slideshow Section -->
             <div class="slideshow-container">
                 <div class="slide active" style="background-image: url('https://via.placeholder.com/1500x800/4e7a51/ffffff?text=Book+Cover+1');">
-                    <div class="slide-content">
+                    <div class="slide-title">
                         <h2>Healthy Kids, Happy Future</h2>
-                        <p>A comprehensive guide to nutrition that will set your child up for a lifetime of health.</p>
+                    </div>
+                    <div class="slide-synopsis">
+                        <p>A comprehensive guide to nutrition that will set your child up for a lifetime of health...</p>
                     </div>
                 </div>
 
                 <div class="slide" style="background-image: url('https://via.placeholder.com/1500x800/6ca175/ffffff?text=Book+Cover+2');">
-                    <div class="slide-content">
+                    <div class="slide-title">
                         <h2>The Business of Wellness</h2>
-                        <p>Transform your business approach with health-centered leadership principles.</p>
+                    </div>
+                    <div class="slide-synopsis">
+                        <p>Transform your business approach with health-centered leadership principles...</p>
                     </div>
                 </div>
 
                 <div class="slide" style="background-image: url('https://via.placeholder.com/1500x800/3d5a43/ffffff?text=Book+Cover+3');">
-                    <div class="slide-content">
+                    <div class="slide-title">
                         <h2>Nutrition Essentials for Young Minds</h2>
-                        <p>Discover how proper nutrition impacts cognitive development in children.</p>
+                    </div>
+                    <div class="slide-synopsis">
+                        <p>Discover how proper nutrition impacts cognitive development in children...</p>
                     </div>
                 </div>
 
                 <a class="prev" onclick="changeSlide(-1)">&#10094;</a>
                 <a class="next" onclick="changeSlide(1)">&#10095;</a>
                 
-                <!-- Slide indicator dots -->
-                <div class="dots-container">
-                    <span class="dot active" onclick="currentSlide(0)"></span>
-                    <span class="dot" onclick="currentSlide(1)"></span>
-                    <span class="dot" onclick="currentSlide(2)"></span>
-                </div>
+                
+            </div>
+
+            <!-- Slide indicator dots -->
+            <div class="dots-container">
+                <span class="dot active" onclick="currentSlide(0)"></span>
+                <span class="dot" onclick="currentSlide(1)"></span>
+                <span class="dot" onclick="currentSlide(2)"></span>
             </div>
 
                         <!-- Author Bio Section -->
